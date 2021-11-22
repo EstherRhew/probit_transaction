@@ -13,5 +13,5 @@ svg{ width: 200px; }
 
 .coin_select, .time{ width: 310px; display: flex; justify-content: space-between; align-items: center; margin-top: 50px; }
 .tit{ margin-right: 20px; }
-.coin_name, .transaction_time{ width: 180px; height: 30px; line-height: 30px; outline: none; }
-.transaction_time{ border: 1px solid #4231c8; background: transparent; font-size: 0.8rem;}
+.coin_name, .transaction_time{ width: 180px; height: 30px; line-height: 30px; outline: none;padding:0 10px }
+.transaction_time{ border: 1px solid #4231c8; background: transparent; font-size: 0.8rem; }

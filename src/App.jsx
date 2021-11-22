@@ -1,14 +1,16 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import Select2 from './component/select2'
 import axios from 'axios'
+
+const TIME = 600000;
 
 const App = () => {
   const [coinList, setCoinList] = useState([]);
   const [selected, setSelected] = useState('');
   const [lastTransaction, setLastTransaction] = useState('');
 
-  let lastTime = ''
+  const lastTime = useRef('');
 
   const getCoinList = async () => {
     await axios.get('/api/exchange/v1/market')
@@ -20,25 +22,22 @@ const App = () => {
       })
   }
 
-  const getTickerTime = async (coin) => {
+  const getTickerTime = useCallback(async (coin) => {
     await axios.get(`/api/exchange/v1/ticker?market_ids=${coin}`)
       .then(res => {
-        console.log(res.data.data)
         const ticker = res.data.data
         setLastTransaction(ticker[0].time)
 
-        const prevTime = lastTime;
-        lastTime = ticker[0].time
-        compareTime(prevTime, lastTime);
+        const prevTime = lastTime.current;
+        lastTime.current = ticker[0].time
+        compareTime(prevTime, lastTime.current);
       }).catch(error => {
         console.log(error);
       })
 
-  }
+  }, [])
 
   const compareTime = (prevTime, lastTime) => {
-    console.log(prevTime)
-    console.log(lastTime)
     if (prevTime === lastTime) {
       axios.post('https://api.telegram.org/bot2101900443:AAE7d5THUf_jRP2h81zWHcOv2pRJrXTwPGk/sendMessage',
         {
@@ -54,6 +53,25 @@ const App = () => {
     setSelected(coin);
   }
 
+  const formatDate = (strDate) => {
+    if (lastTransaction === '') {
+      return ``;
+    }
+    const date = new Date(strDate);
+    const year = date.getFullYear();
+    const month = date.getMonth() + 1;
+    const day = date.getDate();
+    const hour = date.getHours();
+    const min = date.getMinutes();
+    const sec = date.getSeconds();
+
+    return `${year}.${dateWithZero(month)}.${dateWithZero(day)} ${dateWithZero(hour)}:${dateWithZero(min)}:${dateWithZero(sec)}`
+  }
+
+  const dateWithZero = (number) => {
+    return (number < 10 ? `0${number}` : number)
+  }
+
   useEffect(() => {
     getCoinList()
   }, [])
@@ -63,14 +81,15 @@ const App = () => {
     if (selected == (null || '')) {
       return;
     }
+    lastTime.current = '';
     getTickerTime(selected);
     const interval = setInterval(() => {
       getTickerTime(selected);
-    }, 600000);
+    }, TIME);
 
     return () => clearInterval(interval);
 
-  }, [selected])
+  }, [selected, getTickerTime])
 
   return (
     <div className="App">
@@ -110,7 +129,7 @@ const App = () => {
         <div className="time">
           <div className="tit">최근 거래 시간</div>
           <div className="transaction_time">
-            {lastTransaction}
+            {formatDate(lastTransaction)}
           </div>
         </div>
       </div>
