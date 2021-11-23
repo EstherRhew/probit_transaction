@@ -5,13 +5,38 @@ select{ border: 1px solid #4231c8; background: transparent; color: #FFFFFF; }
 option{ background: #4231c8; border: 0px; color: #FFFFFF; }
 select:focus{ border: 1px solid #4231c8; background: transparent; }
 
+input[type="number"]::-webkit-outer-spin-button, 
+input[type="number"]::-webkit-inner-spin-button 
+{ -webkit-appearance: none; -moz-appearance: none; appearance: none; } 
+input[type=number] { -moz-appearance: textfield; }
+
 /* main */
 .container{ position: fixed; width: 100vw; height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; background: #171f27; font-weight: bold; color: #FFFFFF; }
 
 svg{ width: 200px; }
 .cls-1{ fill: #4231c8; }
 
-.coin_select, .time{ width: 310px; display: flex; justify-content: space-between; align-items: center; margin-top: 50px; }
+.input_box{ width: 330px; display: flex; justify-content: space-between; align-items: center; margin-top: 50px; }
 .tit{ margin-right: 20px; }
-.coin_name, .transaction_time{ width: 180px; height: 30px; line-height: 30px; outline: none;padding:0 10px }
-.transaction_time{ border: 1px solid #4231c8; background: transparent; font-size: 0.8rem; }
+.content{position:relative; width: 180px; height: 30px; line-height: 30px; outline: none;padding:0 10px ;border: 1px solid #4231c8; background: transparent; font-size: 0.8rem; color:white;display: flex;align-items: center;}
+
+.timerSetter {
+  width: 70%;
+  height: 100%;
+  background-color: transparent;
+  border: none;
+  outline: none;
+  color: white;
+}
+.btn_timer {
+  background-color: rgb(67, 60, 128);
+  outline: none;
+  border: none;
+  font-size: 0.8rem;
+  padding: 0 10px;
+  height: 100%;
+  cursor: pointer;
+  position: absolute;
+  right: 0;
+  color:white;
+}

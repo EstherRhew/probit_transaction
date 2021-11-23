@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import Select2 from './component/select2'
+import Timer from './component/timer';
 import axios from 'axios'
 
 const TIME = 600000;
@@ -12,8 +13,10 @@ const App = () => {
 
   const lastTime = useRef('');
 
+  const inputRef = useRef();
+
   const getCoinList = async () => {
-    await axios.get('/api/exchange/v1/market')
+    await axios.get('/probit/api/exchange/v1/market')
       .then(res => {
         setCoinList(res.data.data)
       })
@@ -23,7 +26,7 @@ const App = () => {
   }
 
   const getTickerTime = useCallback(async (coin) => {
-    await axios.get(`/api/exchange/v1/ticker?market_ids=${coin}`)
+    await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
       .then(res => {
         const ticker = res.data.data
         setLastTransaction(ticker[0].time)
@@ -76,7 +79,6 @@ const App = () => {
     getCoinList()
   }, [])
 
-
   useEffect(() => {
     if (selected == (null || '')) {
       return;
@@ -85,6 +87,7 @@ const App = () => {
     getTickerTime(selected);
     const interval = setInterval(() => {
       getTickerTime(selected);
+
     }, TIME);
 
     return () => clearInterval(interval);
@@ -118,7 +121,7 @@ const App = () => {
           </a>
         </div>
 
-        <div className="coin_select">
+        <div className="input_box coin_select">
           <div className="tit">코인명 - 시장</div>
           <Select2
             coinList={coinList}
@@ -126,13 +129,31 @@ const App = () => {
           />
         </div>
 
-        <div className="time">
+        <div className="input_box time">
           <div className="tit">최근 거래 시간</div>
-          <div className="transaction_time">
+
+          <div className="content">
             {formatDate(lastTransaction)}
           </div>
         </div>
+
+
+        <div className="input_box time">
+          <div className="tit">타이머 설정 시간</div>
+
+          <div className="content">
+            <input type="number" className="timerSetter" ref={inputRef} />
+            <button className="btn_timer">확인</button>
+          </div>
+        </div>
+
+        <div className="input_box timer">
+          <div className="tit">타이머</div>
+          <Timer dateWithZero={dateWithZero}></Timer>
+        </div>
       </div>
+
+
     </div>
   );
 }

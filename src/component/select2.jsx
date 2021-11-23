@@ -7,7 +7,7 @@ const Select2 = ({ coinList, onSelect }) => {
   }
 
   return (
-    <select name="market" id="market" className="coin_name" onChange={onChange}>
+    <select name="market" id="market" className="content" onChange={onChange}>
       <option value="">--선택--</option>
       {coinList.map((item, index) =>
         <option value={item.id} key={index}>{item.id}</option>
