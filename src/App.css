@@ -74,7 +74,7 @@ ul {list-style:none;}
 }
 
 .btn_logo:hover  {
-  transform: scale(1.03);
+  transform: scale(1.02);
 }
 
 .btn_logo img {
@@ -112,6 +112,7 @@ ul {list-style:none;}
   color:rgb(71, 70, 70);
   padding: 5px 10px;
   border: 1px solid gray;
+  cursor: pointer;
 }
 
 .list li {

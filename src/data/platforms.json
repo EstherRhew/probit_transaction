@@ -1,0 +1,18 @@
+{
+  "probit": {
+    "name": "Probit",
+    "logo": "./image/logo_probit.png",
+  },
+  "bittrex": {
+    "name": "Bittrex",
+    "logo": "./image/logo_bittrex.png",
+  },
+  "bibox": {
+    "name": "Bibox",
+    "logo": "./image/logo_bibox.png",
+  },
+  "cashierest": {
+    "name": "Cashierest",
+    "logo": "./image/logo_cashierest.png",
+  }
+}

@@ -7,9 +7,10 @@ import axios from 'axios'
 
 const TIME = 600000;
 
-const App = () => {
+const App = ({ api }) => {
   const [coinList, setCoinList] = useState([]);
-  const [selected, setSelected] = useState('');
+  const [selectedPlatform, setSelectedPlatform] = useState('probit')
+  const [selectedCoin, setSelectedCoin] = useState('');
   const [lastTransaction, setLastTransaction] = useState('');
 
   const lastTime = useRef('');
@@ -17,13 +18,9 @@ const App = () => {
   const inputRef = useRef();
 
   const getCoinList = async () => {
-    await axios.get('/probit/api/exchange/v1/market')
-      .then(res => {
-        setCoinList(res.data.data)
-      })
-      .catch(error => {
-        console.log(error);
-      })
+    const result = await api.getCoinList(selectedPlatform);
+    setCoinList(result);
+
   }
 
   const getTickerTime = useCallback(async (coin) => {
@@ -54,7 +51,7 @@ const App = () => {
   }
 
   const onSelect = (coin) => {
-    setSelected(coin);
+    setSelectedCoin(coin);
   }
 
   const formatDate = (strDate) => {
@@ -81,19 +78,19 @@ const App = () => {
   }, [])
 
   useEffect(() => {
-    if (selected == (null || '')) {
+    if (selectedCoin == (null || '')) {
       return;
     }
     lastTime.current = '';
-    getTickerTime(selected);
+    getTickerTime(selectedCoin);
     const interval = setInterval(() => {
-      getTickerTime(selected);
+      getTickerTime(selectedCoin);
 
     }, TIME);
 
     return () => clearInterval(interval);
 
-  }, [selected, getTickerTime])
+  }, [selectedCoin, getTickerTime])
 
   // //test cashierest api 업데이트가 좀 느린듯
   // useEffect(async () => {
@@ -116,17 +113,17 @@ const App = () => {
   //     })
   // })
 
-  //test bittrex
-  useEffect(async () => {
-    await axios.get('/bittrex/markets')
-      .then((res) => console.log(res.data))
-    await axios.get('/bittrex/markets/BMP-BTC/trades')
-      .then((res) => {
-        console.log(res.data[0].executedAt)
-        const data = res.data[0].executedAt
-        console.log(formatDate(data))
-      })
-  })
+  // //test bittrex
+  // useEffect(async () => {
+  //   await axios.get('/bittrex/markets')
+  //     .then((res) => console.log(res.data))
+  //   await axios.get('/bittrex/markets/BMP-BTC/trades')
+  //     .then((res) => {
+  //       console.log(res.data[0].executedAt)
+  //       const data = res.data[0].executedAt
+  //       console.log(formatDate(data))
+  //     })
+  // })
 
   return (
     <div className="App">
@@ -150,7 +147,7 @@ const App = () => {
             </li>
             <li className="logo">
               <button className="btn_logo">
-                <img src="./image/logo_cashierest4.png" alt="logo" />
+                <img src="./image/logo_cashierest.png" alt="logo" />
               </button>
             </li>
 
