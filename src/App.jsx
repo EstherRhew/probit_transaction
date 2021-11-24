@@ -20,6 +20,8 @@ const App = ({ Platforms }) => {
   const onSelectPlatform = (e) => {
     e.preventDefault();
     setSelectedPlatform(e.target.dataset.name)
+    setLastTransaction('');
+    inputRef.current.value = '';
   }
 
   const compareTime = (prevTime, lastTime) => {
@@ -71,7 +73,7 @@ const App = ({ Platforms }) => {
       setLastTransaction()
       return
     }
-    setLastTransaction(result)
+    setLastTransaction(formatDate(result))
     const prevTime = lastTime.current;
     lastTime.current = result
     compareTime(prevTime, lastTime.current);
@@ -160,6 +162,7 @@ const App = ({ Platforms }) => {
             <Select2
               coinList={coinList}
               onSelectCoin={onSelectCoin}
+              selectedPlatform={selectedPlatform}
             />
           </div>
 
@@ -167,7 +170,7 @@ const App = ({ Platforms }) => {
             <div className="tit">최근 거래 시간</div>
 
             <div className="content">
-              {lastTransaction ? formatDate(lastTransaction) : ''}
+              {lastTransaction ? lastTransaction : ''}
             </div>
           </div>
 

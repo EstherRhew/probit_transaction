@@ -20,11 +20,10 @@ const ListBox = ({ list }) => {
           <span className="cell">설정시간</span>
           <span className="cell">타이머</span>
         </li>
-        {list.map((item, index) => {
-          <ListItem item={item} key={index} />
-        })}
-        <ListItem />
-        <ListItem />
+        {list && list.map((item, index) =>
+          <ListItem item={item} key={index} number={index + 1} />
+
+        )}
       </ul>
     </div>
   );

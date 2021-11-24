@@ -10,6 +10,7 @@ const Select2 = ({ coinList, onSelectCoin }) => {
 
   useEffect(() => {
     selectRef.current.value = ""
+    onSelectCoin('')
   }, [coinList])
 
   return (
