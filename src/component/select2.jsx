@@ -10,7 +10,7 @@ const Select2 = ({ coinList, onSelect }) => {
     <select name="market" id="market" className="content" onChange={onChange}>
       <option value="">--선택--</option>
       {coinList.map((item, index) =>
-        <option value={item.id} key={index}>{item.id}</option>
+        <option value={`${item.base}-${item.quote}`} key={index}>{`${item.base}-${item.quote}`}</option>
       )}
     </select>
   )

@@ -3,13 +3,18 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './App';
 
-import Api from './service/index';
+import { Probit, Bittrex, Bibox, Cashierest } from './service/index';
 
-const api = new Api();
+const probit = new Probit();
+const bittrex = new Bittrex();
+const bibox = new Bibox();
+const cashierest = new Cashierest();
+
+const platforms = { probit, bittrex, bibox, cashierest }
 
 ReactDOM.render(
   <React.StrictMode>
-    <App api={api} />
+    <App Platforms={platforms} />
   </React.StrictMode>,
   document.getElementById('root')
 );

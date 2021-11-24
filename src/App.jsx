@@ -7,36 +7,22 @@ import axios from 'axios'
 
 const TIME = 600000;
 
-const App = ({ api }) => {
+const App = ({ Platforms }) => {
   const [coinList, setCoinList] = useState([]);
-  const [selectedPlatform, setSelectedPlatform] = useState('probit')
+  const [selectedPlatform, setSelectedPlatform] = useState('bibox')
   const [selectedCoin, setSelectedCoin] = useState('');
   const [lastTransaction, setLastTransaction] = useState('');
+
+  // const { probit, bittrex, bibox, cashierest } = Platforms
 
   const lastTime = useRef('');
 
   const inputRef = useRef();
 
-  const getCoinList = async () => {
-    const result = await api.getCoinList(selectedPlatform);
-    setCoinList(result);
-
+  const selectPlatform = (e) => {
+    console.log(e.target.dataset.name)
+    setSelectedPlatform(e.target.dataset.name)
   }
-
-  const getTickerTime = useCallback(async (coin) => {
-    await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
-      .then(res => {
-        const ticker = res.data.data
-        setLastTransaction(ticker[0].time)
-
-        const prevTime = lastTime.current;
-        lastTime.current = ticker[0].time
-        compareTime(prevTime, lastTime.current);
-      }).catch(error => {
-        console.log(error);
-      })
-
-  }, [])
 
   const compareTime = (prevTime, lastTime) => {
     if (prevTime === lastTime) {
@@ -73,9 +59,31 @@ const App = ({ api }) => {
     return (number < 10 ? `0${number}` : number)
   }
 
-  useEffect(() => {
-    getCoinList()
+
+
+  const getCoinList = useCallback(async (platform) => {
+    const result = await Platforms[platform].getCoinList();
+    setCoinList(result);
+  }, [Platforms])
+
+  const getTickerTime = useCallback(async (coin) => {
+    await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
+      .then(res => {
+        const ticker = res.data.data
+        setLastTransaction(ticker[0].time)
+
+        const prevTime = lastTime.current;
+        lastTime.current = ticker[0].time
+        compareTime(prevTime, lastTime.current);
+      }).catch(error => {
+        console.log(error);
+      })
+
   }, [])
+
+  useEffect(() => {
+    getCoinList(selectedPlatform)
+  }, [getCoinList, selectedPlatform])
 
   useEffect(() => {
     if (selectedCoin == (null || '')) {
@@ -104,7 +112,7 @@ const App = ({ api }) => {
   // useEffect(async () => {
   //   await axios.get('/bibox/pairList')
   //     .then((res) => console.log(res.data.result))
-  //   await axios.get('/bibox/deals?pair=DAI_USDT&size=5')
+  //   await axios.get('/bibox/deals?pair=DAI_USDT&size=1')
   //     .then((res) => {
   //       console.log(res.data.result[0])
   //       const time = res.data.result[0].time
@@ -130,24 +138,24 @@ const App = ({ api }) => {
       <div className="container">
         <div className="add_form">
           <ul className="logos">
-            <li className="logo">
+            <li className="logo" onClick={selectPlatform}>
               <button className="btn_logo">
-                <img src="./image/logo_probit.png" alt="logo" />
+                <img src="./image/logo_probit.png" alt="logo" data-name="probit" />
               </button>
             </li>
-            <li className="logo">
+            <li className="logo" onClick={selectPlatform}>
               <button className="btn_logo">
-                <img src="./image/logo_bittrex.png" alt="logo" />
+                <img src="./image/logo_bittrex.png" alt="logo" data-name="bittrex" />
               </button>
             </li>
-            <li className="logo">
+            <li className="logo" onClick={selectPlatform}>
               <button className="btn_logo">
-                <img src="./image/logo_bibox.png" alt="logo" />
+                <img src="./image/logo_bibox.png" alt="logo" data-name="bibox" />
               </button>
             </li>
-            <li className="logo">
+            <li className="logo" onClick={selectPlatform}>
               <button className="btn_logo">
-                <img src="./image/logo_cashierest.png" alt="logo" />
+                <img src="./image/logo_cashierest.png" alt="logo" data-name="cashierest" />
               </button>
             </li>
 

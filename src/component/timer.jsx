@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react';
+import React, { useState } from 'react';
 import { useEffect } from 'react/cjs/react.development';
 
 const Timer = ({ dateWithZero }) => {
