@@ -19,7 +19,7 @@ export default class Probit {
   async getLastTransaction(coin) {
     try {
       const res = await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
-      return res.data.data[0].time
+      return res.data.data[0].time //2021-11-24T06:34:11.000Z
     } catch (error) {
       console.log(error);
     }

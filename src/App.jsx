@@ -5,22 +5,20 @@ import Timer from './component/timer';
 import ListBox from './component/list_box';
 import axios from 'axios'
 
-const TIME = 600000;
-
 const App = ({ Platforms }) => {
   const [coinList, setCoinList] = useState([]);
-  const [selectedPlatform, setSelectedPlatform] = useState('bibox')
+  const [selectedPlatform, setSelectedPlatform] = useState('probit')
   const [selectedCoin, setSelectedCoin] = useState('');
   const [lastTransaction, setLastTransaction] = useState('');
-
-  // const { probit, bittrex, bibox, cashierest } = Platforms
+  const [time, setTime] = useState();
+  const [list, setList] = useState([]);
 
   const lastTime = useRef('');
 
   const inputRef = useRef();
 
-  const selectPlatform = (e) => {
-    console.log(e.target.dataset.name)
+  const onSelectPlatform = (e) => {
+    e.preventDefault();
     setSelectedPlatform(e.target.dataset.name)
   }
 
@@ -36,7 +34,7 @@ const App = ({ Platforms }) => {
     }
   }
 
-  const onSelect = (coin) => {
+  const onSelectCoin = (coin) => {
     setSelectedCoin(coin);
   }
 
@@ -66,20 +64,48 @@ const App = ({ Platforms }) => {
     setCoinList(result);
   }, [Platforms])
 
-  const getTickerTime = useCallback(async (coin) => {
-    await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
-      .then(res => {
-        const ticker = res.data.data
-        setLastTransaction(ticker[0].time)
+  const getTickerTime = useCallback(async (platform, coin) => {
+    const result = await Platforms[platform].getLastTransaction(coin)
+    console.log(result)
+    if (result == undefined) {
+      setLastTransaction()
+      return
+    }
+    setLastTransaction(result)
+    const prevTime = lastTime.current;
+    lastTime.current = result
+    compareTime(prevTime, lastTime.current);
 
-        const prevTime = lastTime.current;
-        lastTime.current = ticker[0].time
-        compareTime(prevTime, lastTime.current);
-      }).catch(error => {
-        console.log(error);
-      })
+    // await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
+    //   .then(res => {
+    //     const ticker = res.data.data
+    //     setLastTransaction(ticker[0].time)
+
+    //     const prevTime = lastTime.current;
+    //     lastTime.current = ticker[0].time
+    //     compareTime(prevTime, lastTime.current);
+    //   }).catch(error => {
+    //     console.log(error);
+    //   })
 
   }, [])
+
+  const addList = (e) => {
+    e.preventDefault();
+    const updated = [...list];
+    updated.push({
+      platform: selectedPlatform,
+      coin: selectedCoin,
+      lastTransaction: lastTransaction,
+      time: time
+    })
+    console.log(updated);
+    setList(updated);
+  }
+
+  const setTimer = (e) => {
+    setTime(e.target.value)
+  }
 
   useEffect(() => {
     getCoinList(selectedPlatform)
@@ -90,83 +116,50 @@ const App = ({ Platforms }) => {
       return;
     }
     lastTime.current = '';
-    getTickerTime(selectedCoin);
+    getTickerTime(selectedPlatform, selectedCoin);
     const interval = setInterval(() => {
-      getTickerTime(selectedCoin);
+      getTickerTime(selectedPlatform, selectedCoin);
 
-    }, TIME);
+    }, 600000);
 
     return () => clearInterval(interval);
 
-  }, [selectedCoin, getTickerTime])
-
-  // //test cashierest api 업데이트가 좀 느린듯
-  // useEffect(async () => {
-  //   await axios.get('/cashierest/TickerAll')
-  //     .then((res) => console.log(res.data.Cashierest))
-  //   await axios.get('/cashierest/RecentTransactions?PaymentCurrency=USDT&CoinCode=BTC&Count=1')
-  //     .then((res) => console.log(res.data.ReturnData[0].TransactionDate))
-  // })
-
-  //test bibox
-  // useEffect(async () => {
-  //   await axios.get('/bibox/pairList')
-  //     .then((res) => console.log(res.data.result))
-  //   await axios.get('/bibox/deals?pair=DAI_USDT&size=1')
-  //     .then((res) => {
-  //       console.log(res.data.result[0])
-  //       const time = res.data.result[0].time
-  //       const date = new Date(time)
-  //       console.log(formatDate(date))
-  //     })
-  // })
-
-  // //test bittrex
-  // useEffect(async () => {
-  //   await axios.get('/bittrex/markets')
-  //     .then((res) => console.log(res.data))
-  //   await axios.get('/bittrex/markets/BMP-BTC/trades')
-  //     .then((res) => {
-  //       console.log(res.data[0].executedAt)
-  //       const data = res.data[0].executedAt
-  //       console.log(formatDate(data))
-  //     })
-  // })
+  }, [selectedPlatform, selectedCoin, getTickerTime])
 
   return (
     <div className="App">
       <div className="container">
-        <div className="add_form">
+        <form className="add_form">
+          {/* <span>거래소를 선택하세요.</span> */}
           <ul className="logos">
-            <li className="logo" onClick={selectPlatform}>
-              <button className="btn_logo">
+            <li className="logo" onClick={onSelectPlatform}>
+              <button className={`btn_logo ${selectedPlatform === 'probit' ? "clicked" : "a"}`}>
                 <img src="./image/logo_probit.png" alt="logo" data-name="probit" />
               </button>
             </li>
-            <li className="logo" onClick={selectPlatform}>
-              <button className="btn_logo">
+            <li className="logo" onClick={onSelectPlatform}>
+              <button className={`btn_logo ${selectedPlatform === 'bittrex' && "clicked"}`}>
                 <img src="./image/logo_bittrex.png" alt="logo" data-name="bittrex" />
               </button>
             </li>
-            <li className="logo" onClick={selectPlatform}>
-              <button className="btn_logo">
+            <li className="logo" onClick={onSelectPlatform}>
+              <button className={`btn_logo ${selectedPlatform === 'bibox' && "clicked"}`}>
                 <img src="./image/logo_bibox.png" alt="logo" data-name="bibox" />
               </button>
             </li>
-            <li className="logo" onClick={selectPlatform}>
-              <button className="btn_logo">
+            <li className="logo" onClick={onSelectPlatform}>
+              <button className={`btn_logo ${selectedPlatform === 'cashierest' && "clicked"}`}>
                 <img src="./image/logo_cashierest.png" alt="logo" data-name="cashierest" />
               </button>
             </li>
 
           </ul>
 
-
           <div className="input_box coin_select">
             <div className="tit">코인명 - 시장</div>
             <Select2
               coinList={coinList}
-              onSelect={onSelect}
+              onSelectCoin={onSelectCoin}
             />
           </div>
 
@@ -174,7 +167,7 @@ const App = ({ Platforms }) => {
             <div className="tit">최근 거래 시간</div>
 
             <div className="content">
-              {formatDate(lastTransaction)}
+              {lastTransaction ? formatDate(lastTransaction) : ''}
             </div>
           </div>
 
@@ -183,7 +176,7 @@ const App = ({ Platforms }) => {
             <div className="tit">타이머 설정 시간</div>
 
             <div className="content">
-              <input type="number" className="timerSetter" ref={inputRef} />
+              <input type="number" className="timerSetter" ref={inputRef} onChange={setTimer} />
               <button className="btn_timer">확인</button>
             </div>
           </div>
@@ -192,8 +185,12 @@ const App = ({ Platforms }) => {
             <div className="tit">타이머</div>
             <Timer dateWithZero={dateWithZero}></Timer>
           </div>
-        </div>
-        <ListBox></ListBox>
+
+          <div className="input_box">
+            <button className="btn_add" onClick={addList}>추가</button>
+          </div>
+        </form>
+        <ListBox list={list}></ListBox>
       </div>
 
 

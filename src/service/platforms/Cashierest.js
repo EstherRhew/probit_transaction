@@ -19,9 +19,10 @@ export default class Cashierest {
   }
 
   async getLastTransaction(coin) {
+    const currency = coin.split('-');
     try {
-      const res = await axios.get(`/cashierest/RecentTransactions?PaymentCurrency=USDT&CoinCode=${coin}&Count=1`)
-      return res.data
+      const res = await axios.get(`/cashierest/RecentTransactions?PaymentCurrency=${currency[1]}&CoinCode=${currency[0]}&Count=1`)
+      return res.data.ReturnData[0].TransactionDate //2021-11-24 15:36:37
     } catch (error) {
       console.log(error);
     }

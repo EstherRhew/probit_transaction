@@ -3,7 +3,7 @@ import axios from 'axios';
 export default class Bibox {
   async getCoinList() {
     try {
-      const res = await axios.get('/bibox/pairList');
+      const res = await axios.get('/bibox/marketAll');
       const result = res.data.result.map((item) => {
         return {
           base: item.coin_symbol,
@@ -17,9 +17,10 @@ export default class Bibox {
   }
 
   async getLastTransaction(coin) {
+    const currency = coin.split('-');
     try {
-      const res = await axios.get(`/bibox/deals?pair=${coin}&size=1`)
-      return res.data.data[0].time
+      const res = await axios.get(`/bibox/deals?pair=${currency[0]}_${currency[1]}&size=1`)
+      return res.data.result[0].time //1604316939377
     } catch (error) {
       console.log(error);
     }
