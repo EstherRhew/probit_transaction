@@ -1,7 +1,7 @@
 import React from 'react';
 import ListItem from './list_item';
 
-const ListBox = ({ list }) => {
+const ListBox = ({ list, dateWithZero, getTickerTime }) => {
   return (
     <div className="list_box">
       <ul className="tabs">
@@ -21,8 +21,7 @@ const ListBox = ({ list }) => {
           <span className="cell">타이머</span>
         </li>
         {list && list.map((item, index) =>
-          <ListItem item={item} key={index} number={index + 1} />
-
+          <ListItem item={item} key={index} number={index + 1} dateWithZero={dateWithZero} getTickerTime={getTickerTime} />
         )}
       </ul>
     </div>

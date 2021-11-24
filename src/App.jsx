@@ -1,9 +1,9 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import Select2 from './component/select2'
-import Timer from './component/timer';
+
 import ListBox from './component/list_box';
-import axios from 'axios'
+
 
 const App = ({ Platforms }) => {
   const [coinList, setCoinList] = useState([]);
@@ -12,8 +12,6 @@ const App = ({ Platforms }) => {
   const [lastTransaction, setLastTransaction] = useState('');
   const [time, setTime] = useState();
   const [list, setList] = useState([]);
-
-  const lastTime = useRef('');
 
   const inputRef = useRef();
 
@@ -25,23 +23,13 @@ const App = ({ Platforms }) => {
     inputRef.current.value = '';
   }
 
-  const compareTime = (prevTime, lastTime) => {
-    if (prevTime === lastTime) {
-      axios.post('https://api.telegram.org/bot2101900443:AAE7d5THUf_jRP2h81zWHcOv2pRJrXTwPGk/sendMessage',
-        {
-          chat_id: '1816739969',
-          text: '10분간 거래가 일어나지 않았습니다'
-        })
-    } else {
-      return;
-    }
-  }
+
 
   const onSelectCoin = (coin) => {
     setSelectedCoin(coin);
   }
 
-  const formatDate = (strDate) => {
+  const formatDate = useCallback((strDate) => {
     if (strDate === '') {
       return ``;
     }
@@ -54,7 +42,7 @@ const App = ({ Platforms }) => {
     const sec = date.getSeconds();
 
     return `${year}.${dateWithZero(month)}.${dateWithZero(day)} ${dateWithZero(hour)}:${dateWithZero(min)}:${dateWithZero(sec)}`
-  }
+  }, [])
 
   const dateWithZero = (number) => {
     return (number < 10 ? `0${number}` : number)
@@ -75,10 +63,8 @@ const App = ({ Platforms }) => {
       return
     }
     setLastTransaction(formatDate(result))
-    const prevTime = lastTime.current;
-    lastTime.current = result
-    compareTime(prevTime, lastTime.current);
-  }, [])
+
+  }, [Platforms, formatDate])
 
   const addList = (e) => {
     e.preventDefault();
@@ -107,15 +93,7 @@ const App = ({ Platforms }) => {
     if (selectedCoin == (null || '')) {
       return;
     }
-    lastTime.current = '';
     getTickerTime(selectedPlatform, selectedCoin);
-    const interval = setInterval(() => {
-      getTickerTime(selectedPlatform, selectedCoin);
-
-    }, 600000);
-
-    return () => clearInterval(interval);
-
   }, [selectedPlatform, selectedCoin, getTickerTime])
 
   return (
@@ -170,19 +148,15 @@ const App = ({ Platforms }) => {
 
             <div className="content">
               <input type="number" className="timerSetter" ref={inputRef} onChange={setTimer} />
+              <span className="text">분</span>
             </div>
-          </div>
-
-          <div className="input_box timer">
-            <div className="tit">타이머</div>
-            <Timer dateWithZero={dateWithZero}></Timer>
           </div>
 
           <div className="input_box">
             <button className="btn_add" onClick={addList}>추가</button>
           </div>
         </form>
-        <ListBox list={list}></ListBox>
+        <ListBox list={list} dateWithZero={dateWithZero} getTickerTime={getTickerTime}></ListBox>
       </div>
 
 

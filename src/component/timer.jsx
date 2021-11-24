@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
 import { useEffect } from 'react/cjs/react.development';
 
-const Timer = ({ dateWithZero }) => {
-  const [min, setMin] = useState(10);
+const Timer = ({ dateWithZero, time }) => {
+  const [min, setMin] = useState(time);
   const [sec, setSec] = useState(0);
 
   useEffect(() => {
@@ -24,7 +24,7 @@ const Timer = ({ dateWithZero }) => {
   }, [min, sec])
 
   return (
-    <div className="content">
+    <div className="timer">
       <span className="min">{dateWithZero(min)}</span>
       <span>:</span>
       <span className="sec">{dateWithZero(sec)}</span>
