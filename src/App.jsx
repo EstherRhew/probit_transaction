@@ -19,6 +19,7 @@ const App = ({ Platforms }) => {
 
   const onSelectPlatform = (e) => {
     e.preventDefault();
+    setSelectedCoin('');
     setSelectedPlatform(e.target.dataset.name)
     setLastTransaction('');
     inputRef.current.value = '';
@@ -77,19 +78,6 @@ const App = ({ Platforms }) => {
     const prevTime = lastTime.current;
     lastTime.current = result
     compareTime(prevTime, lastTime.current);
-
-    // await axios.get(`/probit/api/exchange/v1/ticker?market_ids=${coin}`)
-    //   .then(res => {
-    //     const ticker = res.data.data
-    //     setLastTransaction(ticker[0].time)
-
-    //     const prevTime = lastTime.current;
-    //     lastTime.current = ticker[0].time
-    //     compareTime(prevTime, lastTime.current);
-    //   }).catch(error => {
-    //     console.log(error);
-    //   })
-
   }, [])
 
   const addList = (e) => {
@@ -103,6 +91,8 @@ const App = ({ Platforms }) => {
     })
     console.log(updated);
     setList(updated);
+    setTime();
+    inputRef.current.value = "";
   }
 
   const setTimer = (e) => {
@@ -180,7 +170,6 @@ const App = ({ Platforms }) => {
 
             <div className="content">
               <input type="number" className="timerSetter" ref={inputRef} onChange={setTimer} />
-              <button className="btn_timer">확인</button>
             </div>
           </div>
 
