@@ -1,6 +1,6 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, memo } from 'react';
 
-const Timer = ({ dateWithZero, item, compareTime }) => {
+const Timer = memo(({ dateWithZero, item, compareTime }) => {
   const [min, setMin] = useState(dateWithZero(item.time));
   const [sec, setSec] = useState(dateWithZero(0));
   const totalInSeconds = useRef(item.time * 60)
@@ -31,6 +31,6 @@ const Timer = ({ dateWithZero, item, compareTime }) => {
       <span className="sec">{sec}</span>
     </div>
   );
-};
+});
 
 export default Timer;

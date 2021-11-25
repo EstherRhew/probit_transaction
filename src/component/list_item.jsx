@@ -1,11 +1,10 @@
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Timer from './timer';
 import axios from 'axios';
 
-const ListItem = ({ item, number, dateWithZero, getTickerTime, deleteList }) => {
+const ListItem = ({ tab, item, number, dateWithZero, getTickerTime, deleteList }) => {
   const [last, setLast] = useState(item.lastTransaction)
   const lastTime = useRef(item.lastTransaction);
-
 
   const compareTime = async () => {
     const prevTime = lastTime.current;
@@ -27,8 +26,20 @@ const ListItem = ({ item, number, dateWithZero, getTickerTime, deleteList }) => 
     deleteList(item.id)
   }
 
+  const handleDisplay = () => {
+    if (tab === 'all' || tab === item.platform) {
+      return;
+    } else {
+      return 'hidden'
+    }
+  }
+
+  useEffect(() => {
+    console.log(tab)
+  })
+
   return (
-    <li className="list_item">
+    <li className={`list_item ${handleDisplay()}`} >
       <span className="cell">{number}</span>
       <span className="cell">{item.platform.toUpperCase()}</span>
       <span className="cell">{item.coin}</span>
