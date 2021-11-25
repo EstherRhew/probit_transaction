@@ -1,13 +1,11 @@
-import React, { useRef, useState } from 'react';
-import { useEffect } from 'react/cjs/react.development';
+import React, { useRef, useState, useEffect } from 'react';
 
-const Timer = ({ dateWithZero, time, compareTime }) => {
-  const [min, setMin] = useState(dateWithZero(time));
+const Timer = ({ dateWithZero, item, compareTime }) => {
+  const [min, setMin] = useState(dateWithZero(item.time));
   const [sec, setSec] = useState(dateWithZero(0));
-  const totalInSeconds = useRef(time * 60)
+  const totalInSeconds = useRef(item.time * 60)
 
   useEffect(() => {
-
     const interval = setInterval(() => {
       if (totalInSeconds.current > 0) {
         totalInSeconds.current -= 1;
@@ -15,28 +13,16 @@ const Timer = ({ dateWithZero, time, compareTime }) => {
         setMin(dateWithZero(Math.floor(totalInSeconds.current / 60)))
       } else {
         compareTime();
-        totalInSeconds.current = time * 60;
+        totalInSeconds.current = item.time * 60;
         setSec(dateWithZero(0));
-        setMin(dateWithZero(time));
+        setMin(dateWithZero(item.time));
       }
-
-      //console.log(dateWithZero(totalInSeconds.current % 60))
-      //console.log(dateWithZero(Math.floor(totalInSeconds.current / 60)))
-      //if (parseInt(sec) > 0) {
-      //  setSec(parseInt(sec) - 1);
-      //}
-      //if (parseInt(sec) === 0) {
-      //  if (parseInt(min) === 0) {
-      //    clearInterval(interval);
-      //  } else {
-      //    setMin(parseInt(min) - 1);
-      //    setSec(59);
-      //  }
-      //}
     }, 1000)
 
-    return () => clearInterval(interval);
-  }, [min, sec])
+    return () => {
+      clearInterval(interval)
+    };
+  }, [])
 
   return (
     <div className="timer">

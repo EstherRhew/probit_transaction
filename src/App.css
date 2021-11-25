@@ -156,7 +156,7 @@ ul {list-style:none;}
   width: 6%;
 }
 .cell:nth-child(2) {
-  width:18%;
+  width:17%;
 } 
 .cell:nth-child(3) {
   width:18%;
@@ -172,3 +172,25 @@ ul {list-style:none;}
 .cell:nth-child(6) {
   width:15%;
 } 
+
+.btn_delete {
+  outline: none;
+  background-color: transparent;
+  border: none;
+  opacity: 0;
+  transition: all 100ms ease-in;
+}
+
+.list_item:hover .btn_delete {
+  opacity: 1;
+}
+
+.btn_delete i {
+  color: gray;
+  transition: all 150ms ease-in;
+  font-size: 0.9rem;
+}
+
+.btn_delete i:hover {
+  color:#4231c8;
+}

@@ -23,8 +23,6 @@ const App = ({ Platforms }) => {
     inputRef.current.value = '';
   }
 
-
-
   const onSelectCoin = (coin) => {
     setSelectedCoin(coin);
   }
@@ -44,11 +42,9 @@ const App = ({ Platforms }) => {
     return `${year}.${dateWithZero(month)}.${dateWithZero(day)} ${dateWithZero(hour)}:${dateWithZero(min)}:${dateWithZero(sec)}`
   }, [])
 
-  const dateWithZero = (number) => {
+  const dateWithZero = useCallback((number) => {
     return (number < 10 ? `0${number}` : number)
-  }
-
-
+  }, [])
 
   const getCoinList = useCallback(async (platform) => {
     const result = await Platforms[platform].getCoinList();
@@ -71,6 +67,7 @@ const App = ({ Platforms }) => {
     e.preventDefault();
     const updated = [...list];
     updated.push({
+      id: Date.now(),
       platform: selectedPlatform,
       coin: selectedCoin,
       lastTransaction: lastTransaction,
@@ -82,8 +79,10 @@ const App = ({ Platforms }) => {
     inputRef.current.value = "";
   }
 
-  const updateList = () => {
-
+  const deleteList = (id) => {
+    const updated = list.filter((a) => a.id !== id);
+    console.log(updated)
+    setList(updated);
   }
 
   const setTimer = (e) => {
@@ -161,7 +160,7 @@ const App = ({ Platforms }) => {
             <button className="btn_add" onClick={addList}>추가</button>
           </div>
         </form>
-        <ListBox list={list} dateWithZero={dateWithZero} getTickerTime={getTickerTime}></ListBox>
+        <ListBox list={list} dateWithZero={dateWithZero} getTickerTime={getTickerTime} deleteList={deleteList}></ListBox>
       </div>
 
 
