@@ -1,14 +1,15 @@
-import React, { useRef, useEffect } from 'react';
+import React, { useRef, useEffect, useState } from 'react';
 import Timer from './timer';
 import axios from 'axios';
 
 const ListItem = ({ item, number, dateWithZero, getTickerTime }) => {
-
+  const [last, setLast] = useState(item.lastTransaction)
   const lastTime = useRef(item.lastTransaction);
 
   const compareTime = async () => {
     const prevTime = lastTime.current;
     lastTime.current = await getTickerTime(item.platform, item.coin)
+    setLast(lastTime.current)
     console.log(prevTime)
     console.log(lastTime.current)
     if (prevTime === lastTime.current) {
@@ -22,24 +23,12 @@ const ListItem = ({ item, number, dateWithZero, getTickerTime }) => {
     }
   }
 
-  //useEffect(() => {
-  //const interval = setInterval(() => {
-  //  console.log('start')
-  //  getTickerTime(item.platform, item.coin);
-  //  const prevTime = lastTime.current;
-  //  lastTime.current = item.lastTransaction
-  //  compareTime(prevTime, lastTime.current);
-  //
-  //}, item.time * 60000);
-  //
-  //}, [item, getTickerTime])
-
   return (
     <li className="list_item">
       <span className="cell">{number}</span>
       <span className="cell">{item.platform}</span>
       <span className="cell">{item.coin}</span>
-      <span className="cell">{item.lastTransaction}</span>
+      <span className="cell">{last}</span>
       <span className="cell">{item.time}분</span>
       <span className="cell"><Timer dateWithZero={dateWithZero} time={item.time} compareTime={compareTime} /></span>
     </li>
