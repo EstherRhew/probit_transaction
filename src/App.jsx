@@ -64,6 +64,7 @@ const App = ({ Platforms }) => {
     }
     setLastTransaction(formatDate(result))
 
+    return (formatDate(result));
   }, [Platforms, formatDate])
 
   const addList = (e) => {
@@ -79,6 +80,10 @@ const App = ({ Platforms }) => {
     setList(updated);
     setTime();
     inputRef.current.value = "";
+  }
+
+  const updateList = () => {
+
   }
 
   const setTimer = (e) => {
