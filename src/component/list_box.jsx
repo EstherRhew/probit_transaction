@@ -3,6 +3,8 @@ import ListItem from './list_item';
 
 const ListBox = ({ list, dateWithZero, getTickerTime, deleteList }) => {
   const [tab, setTab] = useState('all')
+  const [filteredList, setFilteredList] = useState(list)
+  const [showSortBy, setShowSortBy] = useState(false)
 
   const onClickTab = (e) => {
     console.log(e.target.textContent.toLowerCase())
@@ -17,8 +19,21 @@ const ListBox = ({ list, dateWithZero, getTickerTime, deleteList }) => {
     return filteredList;
   }
 
+  const onClickSortBy = () => {
+    setShowSortBy(!showSortBy)
+  }
+
   return (
     <div className="list_box">
+      <div className="sortBy" onClick={onClickSortBy}>
+        <span className="sort_text">sort by <i className="fas fa-sort-down"></i></span>
+        <ul className={`sort_tab ${showSortBy && 'show'}`}>
+          <li className="tab_item">거래소</li>
+          <li className="tab_item">코인명</li>
+          <li className="tab_item">최근거래시간</li>
+          <li className="tab_item">설정시간</li>
+        </ul>
+      </div>
       <ul className="tabs" onClick={onClickTab}>
         <li className={`tab ${tab === 'all' && 'clicked'}`}>All</li>
         <li className={`tab ${tab === 'probit' && 'clicked'}`}>Probit</li>

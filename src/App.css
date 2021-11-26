@@ -217,3 +217,50 @@ position:absolute;
 .btn_delete i:hover {
   color:#4231c8;
 }
+
+.sortBy {
+  position:absolute;
+  right: 4em;
+  cursor: pointer;
+}
+
+.sort_text {
+  font-weight: 400;
+  font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+}
+
+.sort_text i {
+  font-size: 0.8rem;
+  margin-left: 0.4em;
+}
+
+.sort_tab {
+  background-color: rgb(22, 18, 18);
+  padding: 0.5em;
+  position: absolute;
+  width: max-content;
+  right: -20px;
+  top: 30px;
+  border-radius: 10px;
+  display: none;
+  z-index: 10;
+}
+
+.sort_tab.show {
+  display: block;
+}
+
+.tab_item {
+  color:rgb(223, 222, 222);
+  font-size: 0.7rem;
+  font-weight: 400;
+  padding: 0.8em;
+  border-radius: 5px;
+}
+
+.tab_item:hover {
+  background-color: rgb(223, 222, 222);
+  color: rgb(22, 18, 18);
+}
