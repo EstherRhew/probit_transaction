@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useRef, useState } from 'react';
 import Timer from './timer';
 import axios from 'axios';
 
@@ -33,10 +33,6 @@ const ListItem = ({ tab, item, number, dateWithZero, getTickerTime, deleteList }
       return 'hidden'
     }
   }
-
-  useEffect(() => {
-    console.log(tab)
-  })
 
   return (
     <li className={`list_item ${handleDisplay()}`} >

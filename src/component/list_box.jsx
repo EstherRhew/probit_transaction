@@ -5,33 +5,41 @@ const ListBox = ({ list, dateWithZero, getTickerTime, deleteList }) => {
   const [tab, setTab] = useState('all')
   const [filteredList, setFilteredList] = useState(list)
   const [showSortBy, setShowSortBy] = useState(false)
+  const [sortOption, setSortOption] = useState()
 
   const onClickTab = (e) => {
     console.log(e.target.textContent.toLowerCase())
     setTab(e.target.textContent.toLowerCase())
   }
 
-  const filterList = (list) => {
-    if (tab === 'all') {
-      return list;
-    }
-    const filteredList = list.filter((item) => item.platform === tab)
-    return filteredList;
-  }
-
   const onClickSortBy = () => {
     setShowSortBy(!showSortBy)
+  }
+
+  const onSetSortOption = (e) => {
+    setSortOption(e.target.dataset.name)
+    onSortBy(sortOption)
+  }
+
+  const onSortBy = (option) => {
+    const updated = [...list];
+    console.log(option)
+    updated.sort(function (a, b) {
+      console.log(a[option])
+      return (a[option] - b[option]);
+    })
+    console.log(updated)
   }
 
   return (
     <div className="list_box">
       <div className="sortBy" onClick={onClickSortBy}>
         <span className="sort_text">sort by <i className="fas fa-sort-down"></i></span>
-        <ul className={`sort_tab ${showSortBy && 'show'}`}>
-          <li className="tab_item">거래소</li>
-          <li className="tab_item">코인명</li>
-          <li className="tab_item">최근거래시간</li>
-          <li className="tab_item">설정시간</li>
+        <ul className={`sort_tab ${showSortBy && 'show'}`} onClick={onSetSortOption}>
+          <li className="tab_item" data-name="platform">거래소</li>
+          <li className="tab_item" data-name="coin">코인명</li>
+          <li className="tab_item" data-name="lastTransaction">최근거래시간</li>
+          <li className="tab_item" data-name="time">설정시간</li>
         </ul>
       </div>
       <ul className="tabs" onClick={onClickTab}>
