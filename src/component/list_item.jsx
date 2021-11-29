@@ -33,7 +33,6 @@ const ListItem = ({ tab, item, number, dateWithZero, getTickerTime, deleteList }
       return 'hidden'
     }
   }
-
   return (
     <li className={`list_item ${handleDisplay()}`} >
       <span className="cell">{number}</span>

@@ -73,7 +73,6 @@ const App = ({ Platforms }) => {
       lastTransaction: lastTransaction,
       time: time
     })
-    console.log(updated);
     setList(updated);
     setTime();
     inputRef.current.value = "";
@@ -81,12 +80,11 @@ const App = ({ Platforms }) => {
 
   const deleteList = (id) => {
     const updated = list.filter((a) => a.id !== id);
-    console.log(updated)
     setList(updated);
   }
 
   const setTimer = (e) => {
-    setTime(e.target.value)
+    setTime(parseInt(e.target.value))
   }
 
   useEffect(() => {
@@ -104,7 +102,6 @@ const App = ({ Platforms }) => {
     <div className="App">
       <div className="container">
         <form className="add_form">
-          {/* <span>거래소를 선택하세요.</span> */}
           <ul className="logos">
             <li className="logo" onClick={onSelectPlatform}>
               <button className={`btn_logo ${selectedPlatform === 'probit' ? "clicked" : "a"}`}>
