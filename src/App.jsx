@@ -8,8 +8,8 @@ import ListBox from './component/list_box';
 const App = ({ Platforms }) => {
   const [coinList, setCoinList] = useState([]);
   const [selectedPlatform, setSelectedPlatform] = useState('probit')
-  const [selectedCoin, setSelectedCoin] = useState();
-  const [lastTransaction, setLastTransaction] = useState();
+  const [selectedCoin, setSelectedCoin] = useState('');
+  const [lastTransaction, setLastTransaction] = useState(null);
   const [time, setTime] = useState();
   const [list, setList] = useState([]);
   const [disableBtn, setDisableBtn] = useState(true)
@@ -25,6 +25,7 @@ const App = ({ Platforms }) => {
   }
 
   const onSelectCoin = (coin) => {
+    setLastTransaction(null);
     setSelectedCoin(coin);
   }
 
@@ -54,8 +55,8 @@ const App = ({ Platforms }) => {
 
   const getTickerTime = useCallback(async (platform, coin) => {
     const result = await Platforms[platform].getLastTransaction(coin)
-    if (result == undefined) {
-      setLastTransaction()
+    if (result === undefined || '') {
+      setLastTransaction('not available')
       return
     }
     setLastTransaction(formatDate(result))
@@ -100,7 +101,7 @@ const App = ({ Platforms }) => {
   }, [getCoinList, selectedPlatform])
 
   useEffect(() => {
-    if (selectedCoin == (null || '')) {
+    if (selectedCoin === '') {
       return;
     }
     getTickerTime(selectedPlatform, selectedCoin);
@@ -156,7 +157,7 @@ const App = ({ Platforms }) => {
           </div>
 
 
-          <div className="input_box time">
+          <div className={`input_box time ${lastTransaction === 'not available' && 'hidden'}`}>
             <div className="tit">타이머 설정 시간</div>
 
             <div className="content">

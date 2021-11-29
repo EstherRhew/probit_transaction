@@ -20,6 +20,10 @@ ul {list-style:none;}
 .tit{ margin-right: 20px; }
 .content{position:relative; width: 180px; height: 30px; line-height: 30px; outline: none;padding:0 10px ;border: 1px solid #4231c8; background: transparent; font-size: 0.8rem; color:white;display: flex;align-items: center;}
 
+
+.input_box.time.hidden {
+  opacity: 0.2;
+}
 .timerSetter {
   width: 70%;
   height: 100%;
