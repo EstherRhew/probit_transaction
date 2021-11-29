@@ -99,6 +99,11 @@ ul {list-style:none;}
   /* font-size: 0.8rem; */
 }
 
+.btn_add:disabled {
+  background-color: #949496;
+  cursor: unset;
+}
+
 .list_box {
   flex: 1;
   padding: 3em;

@@ -8,10 +8,11 @@ import ListBox from './component/list_box';
 const App = ({ Platforms }) => {
   const [coinList, setCoinList] = useState([]);
   const [selectedPlatform, setSelectedPlatform] = useState('probit')
-  const [selectedCoin, setSelectedCoin] = useState('');
-  const [lastTransaction, setLastTransaction] = useState('');
+  const [selectedCoin, setSelectedCoin] = useState();
+  const [lastTransaction, setLastTransaction] = useState();
   const [time, setTime] = useState();
   const [list, setList] = useState([]);
+  const [disableBtn, setDisableBtn] = useState(true)
 
   const inputRef = useRef();
 
@@ -53,7 +54,6 @@ const App = ({ Platforms }) => {
 
   const getTickerTime = useCallback(async (platform, coin) => {
     const result = await Platforms[platform].getLastTransaction(coin)
-    console.log(result)
     if (result == undefined) {
       setLastTransaction()
       return
@@ -62,6 +62,14 @@ const App = ({ Platforms }) => {
 
     return (formatDate(result));
   }, [Platforms, formatDate])
+
+  const checkAllFields = () => {
+    if (selectedPlatform && selectedCoin && lastTransaction && time) {
+      setDisableBtn(false)
+    } else {
+      setDisableBtn(true)
+    }
+  }
 
   const addList = (e) => {
     e.preventDefault();
@@ -97,6 +105,10 @@ const App = ({ Platforms }) => {
     }
     getTickerTime(selectedPlatform, selectedCoin);
   }, [selectedPlatform, selectedCoin, getTickerTime])
+
+  useEffect(() => {
+    checkAllFields()
+  })
 
   return (
     <div className="App">
@@ -154,7 +166,7 @@ const App = ({ Platforms }) => {
           </div>
 
           <div className="input_box">
-            <button className="btn_add" onClick={addList}>추가</button>
+            <button className="btn_add" onClick={addList} disabled={disableBtn} >추가</button>
           </div>
         </form>
         <ListBox list={list} dateWithZero={dateWithZero} getTickerTime={getTickerTime} deleteList={deleteList}></ListBox>

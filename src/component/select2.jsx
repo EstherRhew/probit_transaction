@@ -1,10 +1,9 @@
 import React from 'react';
-import { useEffect, useRef } from 'react/cjs/react.development';
+import { useEffect, useRef } from 'react';
 
 const Select2 = ({ coinList, onSelectCoin }) => {
   const selectRef = useRef();
   const onChange = (e) => {
-    console.log(e.target.value)
     onSelectCoin(e.target.value)
   }
 
