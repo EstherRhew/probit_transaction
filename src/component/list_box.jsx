@@ -31,6 +31,7 @@ const ListBox = ({ list, dateWithZero, getTickerTime, deleteList }) => {
           <li className="tab_item" data-name="coin">코인명</li>
           <li className="tab_item" data-name="lastTransaction">최근거래시간</li>
           <li className="tab_item" data-name="time">설정시간</li>
+          <li className="tab_item" data-name="user">사용자</li>
         </ul>
       </div>
       <ul className="tabs" onClick={onClickTab}>
@@ -48,6 +49,7 @@ const ListBox = ({ list, dateWithZero, getTickerTime, deleteList }) => {
           <span className="cell">마지막 거래</span>
           <span className="cell">설정시간</span>
           <span className="cell">타이머</span>
+          <span className="cell">사용자</span>
         </li>
         {list && list.sort((function (a, b) {
           if (a[sortOption] > b[sortOption]) {

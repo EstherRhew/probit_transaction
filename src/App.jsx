@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './App.css';
 import Select2 from './component/select2'
-
 import ListBox from './component/list_box';
 
 
@@ -11,10 +10,12 @@ const App = ({ Platforms }) => {
   const [selectedCoin, setSelectedCoin] = useState('');
   const [lastTransaction, setLastTransaction] = useState(null);
   const [time, setTime] = useState();
+  const [user, setUser] = useState();
   const [list, setList] = useState([]);
   const [disableBtn, setDisableBtn] = useState(true)
 
   const inputRef = useRef();
+  const inputUserRef = useRef();
 
   const onSelectPlatform = (e) => {
     e.preventDefault();
@@ -22,6 +23,7 @@ const App = ({ Platforms }) => {
     setSelectedPlatform(e.target.dataset.name)
     setLastTransaction('');
     inputRef.current.value = '';
+    inputUserRef.current.value = '';
   }
 
   const onSelectCoin = (coin) => {
@@ -65,7 +67,7 @@ const App = ({ Platforms }) => {
   }, [Platforms, formatDate])
 
   const checkAllFields = () => {
-    if (selectedPlatform && selectedCoin && lastTransaction && time) {
+    if (selectedPlatform && selectedCoin && lastTransaction && time && user) {
       setDisableBtn(false)
     } else {
       setDisableBtn(true)
@@ -80,11 +82,14 @@ const App = ({ Platforms }) => {
       platform: selectedPlatform,
       coin: selectedCoin,
       lastTransaction: lastTransaction,
-      time: time
+      time: time,
+      user: user
     })
     setList(updated);
     setTime();
+    setUser();
     inputRef.current.value = "";
+    inputUserRef.current.value = '';
   }
 
   const deleteList = (id) => {
@@ -94,6 +99,10 @@ const App = ({ Platforms }) => {
 
   const setTimer = (e) => {
     setTime(parseInt(e.target.value))
+  }
+
+  const setUserName = (e) => {
+    setUser(e.target.value)
   }
 
   useEffect(() => {
@@ -166,6 +175,15 @@ const App = ({ Platforms }) => {
             </div>
           </div>
 
+
+          <div className={`input_box user ${lastTransaction === 'not available' && 'hidden'}`}>
+            <div className="tit">사용자</div>
+
+            <div className="content">
+              <input type="text" className="userSetter" ref={inputUserRef} onChange={setUserName} />
+            </div>
+          </div>
+
           <div className="input_box">
             <button className="btn_add" onClick={addList} disabled={disableBtn} >추가</button>
           </div>
@@ -179,4 +197,3 @@ const App = ({ Platforms }) => {
 }
 
 export default App;
-

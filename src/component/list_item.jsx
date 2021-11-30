@@ -14,7 +14,7 @@ const ListItem = ({ tab, item, number, dateWithZero, getTickerTime, deleteList }
       axios.post('https://api.telegram.org/bot2101900443:AAE7d5THUf_jRP2h81zWHcOv2pRJrXTwPGk/sendMessage',
         {
           chat_id: '1816739969',
-          text: `${item.platform.toUpperCase()} ${item.coin} - ${item.time}분간 거래가 일어나지 않았습니다`
+          text: `${item.user}님의 ${item.platform.toUpperCase()} ${item.coin} - ${item.time}분간 거래가 일어나지 않았습니다`
         })
     } else {
       return;
@@ -43,6 +43,7 @@ const ListItem = ({ tab, item, number, dateWithZero, getTickerTime, deleteList }
       <span className="cell">
         <Timer key={item.id} dateWithZero={dateWithZero} item={item} compareTime={compareTime} />
       </span>
+      <span className="cell">{item.user}</span>
       <button className="btn_delete" onClick={onDelete}><i className="fas fa-minus-circle"></i></button>
     </li>
   );
